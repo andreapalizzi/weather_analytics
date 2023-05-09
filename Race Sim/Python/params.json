@@ -1,0 +1,17 @@
+{
+	"cyclists": {
+		"Andrea": {"weight": 1, "max_power": 1, "max_rpm": 1},
+		"Vittoria": {"weight": 1, "max_power": 1, "max_rpm": 1}
+	}
+	,
+	"bikes": {
+		"Taurus X": {"weight": 1, "frontal_area": 1},
+		"Taurus": {"weight": 1, "frontal_area": 1},
+		"Phoenix": {"weight": 1, "frontal_area": 1},
+		"Cerberus": {"weight": 1, "frontal_area": 1}
+	}
+	,
+	"main gear packs": {
+		"0": [12,13,15,17,19,22,25,28,31,34,38,42]
+	}
+}
