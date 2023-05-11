@@ -1,3 +1,7 @@
 parameter,value
-cyclist_id, 
-blablabla,50
+Area,0.28432
+g,9.81
+Mass,92
+Density,1.225
+Inertia,0.044
+Efficiency,0.97
