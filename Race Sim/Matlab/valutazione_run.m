@@ -4,7 +4,7 @@ clear all
 close all
 
 %1a riga del csv è riga 0, 1a riga di un vettore è riga 1 
-data=csvread('Thursday_PM_Andrea_corr.csv',1,0);
+data=csvread('BM_19_Tuesday_AM_Andrea.csv',1,0);
 P_med = mean(data((1:end),4));
 P_max = max(data((1:end),4));
 N = length(data(1:end,3));
