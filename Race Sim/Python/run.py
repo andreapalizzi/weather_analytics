@@ -12,9 +12,12 @@ class Run:
     
     def set_data(self, data):
         
+
         self.data = pd.DataFrame(data, columns=["Time", "Torq", "Speed", "Power", "Distance", "Cadence", "Heart rate", "ID", "Altitude"])
         self.data["Time"] = pd.Series([dt.datetime(year=2000,month=1,day=1,minute=round(np.floor(t)), second=round((t-np.floor(t))*60)) for t in self.data["Time"]]) # convert times into dt.time
         self.data["Speed"]=self.data["Speed"]/3.6
+        self.data["Torq"]=self.data["Power"]*60/self.data["Cadence"] # wheel or pedal rpm? (here pedal)
+        self.data["Wheel rpm"]=self.data["Cadence"] # TODO, they will give it to us
         self.data["Distance"]=self.data["Distance"]
         n = len(self.data)
         self.data["Wind"] = np.zeros(n) # TODO: wind speed for each measurement
@@ -32,10 +35,11 @@ class Run:
     def plot_profiles(self, abscissa="time"):
         xformatter = mdates.DateFormatter('%M:%S')
         x = self.data["Distance"] if abscissa=="space" else self.data["Time"]
-        plt.plot(x,self.data["Speed"], label="Speed (km/h)", markersize=1)
+        plt.plot(x,self.data["Speed"]*3.6, label="Speed (km/h)", markersize=1)
         plt.plot(x,self.data["Power"], label="Power", markersize=1)
         plt.plot(x,self.data["Cadence"], label="Cadence", markersize=1)
-        
+        plt.plot(x,self.data["Torq"], label="Torq", markersize=1)
+
         if abscissa != "space":
             plt.gcf().axes[0].xaxis.set_major_formatter(xformatter)
         plt.legend()
@@ -45,6 +49,15 @@ class Run:
         plt.title("Acceleration (ms^-2)")
         plt.show()
 
+    def plot_speed_loss(self):
+        x = self.data["Time"]
+        plt.plot(x,self.data["Wheel rpm"]*self.config.get("Radius"), label="Theoretical speed")
+        plt.plot(x,self.data["Speed"], label="Measured speed")
+        plt.plot(x,self.data["Wheel rpm"]*self.config.get("Radius")-self.data["Speed"], label="Difference")
+        plt.title("Speed loss")
+        plt.legend()
+        plt.show()
+        
     
         
 class Config:
