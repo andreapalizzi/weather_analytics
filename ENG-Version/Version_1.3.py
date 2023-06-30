@@ -31,10 +31,10 @@ param_4 = 3 # amplitude interval moving avg
 param_5 = 4
 param_6 = 15 # amplitude of intervals
 
-def main(file, graphs=None):
+def main(file, graphs=None, new=False):
 
     f_in = file
-    Data = util.read_file(f_in)
+    Data = util.read_file(f_in, new=False)
     
     t = Data[:,0] # timestamp
     T = Data[:,1] # temperature
@@ -79,6 +79,8 @@ def main(file, graphs=None):
     
     if "2" in graphs:
         util.hgraph_temp_num_gusts(intervals)
+        #se compare un grafico vuoto vuol dire che non sono state rilevate raffiche. Ciò avviene quando le rilevazioni
+        #sono distanti tra loro più di un paio di secondi, o presentano molti buchi, cosa che non permette di raggruppare i dati in maniera continua
 
     if "3" in graphs:
         util.pgraph_dir_time_speed(t, d, s, intervals)
@@ -90,6 +92,28 @@ def main(file, graphs=None):
         util.graph_TPHS(T, p, u, s)
         
 
-for file in ["../Dataset/2022_9_13_new.csv", "../Dataset/2022_9_14_new.csv", "../Dataset/2022_9_15_new.csv", "../Dataset/2022_9_16_new.csv"]:
-    main(file, "5")
+'''
+    La seguente è l'unica parte di codice da dover modificare. 
+In files va scritta la lista dei nomi dei file .csv da voler analizzare, tramite path relativo "../Dataset/nome_file.csv"
+I file che si vogliono analizzare dovranno essere salvati nella cartella Dataset.
+Il secondo parametro è una stringa che contiene i numeri associati ai grafici che si vogliono analizzare (vedere sezione #GRAPHS).
+Basta inserire i numeri nell'ordine che si preferisce (es. "435")
+Il terzo parametro specifica se si ha a che fare con file nuovi (2023 in poi) o file vecchi; la differenza è che dal 2023 i .csv
+contengono informazioni aggiuntive quali latitudine, longitudine e altitudine
 
+SM = Stazione Meteo
+TB = Toolbox
+BM = Battle Mountain
+'''
+#es.
+#files = ["../Dataset/2022_9_13_new.csv", "../Dataset/2022_9_14_new.csv", "../Dataset/2022_9_15_new.csv", "../Dataset/2022_9_16_new.csv"]  #file di esempio
+#files = ["../Dataset/SM_TB_2023_6_5__16_34_58_new.csv"]
+
+'''
+In caso il file .csv della giornata che si vuole analizzare sia spezzato in più file, o presenti problemi che non permettono l'esecuzione diretta,
+provare a utilizzare il codice di preprocessing nella cartella "preprocessing"
+'''
+
+files = ["../Dataset/file1_new.csv", "../Dataset/file2_new.csv", "../Dataset/file3_new.csv"]
+for file in files:
+    main(file, "2354", new=True)

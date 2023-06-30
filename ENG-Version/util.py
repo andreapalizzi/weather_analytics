@@ -4,9 +4,9 @@ from datetime import timedelta
 from gust import Gust
 import matplotlib.pyplot as plt
 
-def read_file(file_name):
+def read_file(file_name, new=False):
     '''Acquisizione csv in una matrice Data
-    Schema csv: (timeStamp, Temperature, Pressure, Humidity, Wind_Speed, Wind_Direction)
+    Schema csv: (timeStamp, Temperature, Pressure, Humidity, Wind_Speed, Wind_Direction, + latitude, longitude, altitude)
     '''
     Data = []
     with open(file_name,newline='') as csvfile:
@@ -14,7 +14,7 @@ def read_file(file_name):
             dummy = line.strip().split(',')
             row = []
             row.append(dt.strptime(dummy[0], '%Y/%m/%d %H:%M:%S'))
-            for j in range(5):
+            for j in range(5+3*new):
                     row.append(float(dummy[j+1]))
             Data.append(row)
     Data = np.array(Data)
@@ -105,8 +105,9 @@ def hgraph_temp_num_gusts(intervals, precision=0.5):
          gusts.extend(interval.Gusts)
 
     x = [gust.avg_temperature() for gust in gusts] # vector con temperatura media gusts
-    plt.hist(x, bins=np.arange(min(x), max(x) + precision, precision))
-    plt.xticks(np.arange(min(x), max(x) + precision, precision))
+    if x:
+        plt.hist(x, bins=np.arange(min(x), max(x) + precision, precision))
+        plt.xticks(np.arange(min(x), max(x) + precision, precision))
     plt.xlabel('Average temperature')
     plt.ylabel('Gust count')
     plt.title('Relation : temperature - gust count (per interval)')
